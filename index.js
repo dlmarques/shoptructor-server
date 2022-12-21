@@ -3,6 +3,7 @@ const app = express();
 const dotenv = require('dotenv')
 const mongoose = require('mongoose')
 const cors = require('cors')
+const bp = require('body-parser')
 
 //variables
 const port = process.env.PORT  || 3001;
@@ -10,6 +11,8 @@ const port = process.env.PORT  || 3001;
 //server config
 dotenv.config();
 app.use(cors());
+app.use(bp.json())
+app.use(bp.urlencoded({extended: true}))
 
 //route variables
 const authRoute = require("./routes/auth")
