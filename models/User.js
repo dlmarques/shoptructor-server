@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 
 const userSchema = new mongoose.Schema({
-  username: {
+  name: {
     type: String,
     required: true,
     min: 6,
@@ -9,28 +9,20 @@ const userSchema = new mongoose.Schema({
   email: {
     type: String,
     required: true,
-    max: 255,
     min: 6,
   },
-  password: {
+  picture: {
+    type: String,
+    required: false,
+  },
+  email_verified: {
+    type: Boolean,
+    required: true,
+  },
+  locale: {
     type: String,
     required: true,
-    min: 8,
-    validate:
-      /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9])(?!.*\s).{8,1024}$/,
-    },
-    projectName: {
-        type: String,
-        required: true,
-        max: 255,
-        min: 6,
-    },
-    country: {
-        type: String,
-        required: true,
-        max: 255,
-        min: 6,
-    },
+  },
 });
 
 module.exports = mongoose.model("User", userSchema);

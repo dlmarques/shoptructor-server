@@ -1,47 +1,65 @@
 const router = require("express").Router();
 const User = require("../models/User");
-const jwt = require("jsonwebtoken");
-const bcrypt = require("bcrypt");
-//const verifyToken = require("../utils/verifyToken");
-const { registerValidation, loginValidation } = require("../utils/validation");
+const Project = require("../models/Project");
 
-router.get("/test", (req, res) => {
+const verifyToken = require("../utils/verifyToken");
 
-    res.send(true);
+//CHECK USER
+router.post("/checkUser", async (req, res) => {
+  const email = req.body.email;
+
+  //Checking if user is already in the database
+  const emailExist = await User.findOne({ email: email });
+  if (emailExist) return res.status(200).send(true);
+
+  return res.status(400).send(false);
 });
 
-router.post("/register", async (req, res) => {
-    const { username, email, password, projectName, country } = req.body;
-    const { error } = registerValidation(req.body);
+//REGISTER
+router.post("/registerUser", async (req, res) => {
+  const user = req.body.user;
 
-    if (error) return res.status(400).send(error);
+  //Checking if user is already in the database
+  const emailExist = await User.findOne({ email: user.email });
+  if (emailExist) return res.status(400).send("Email already exists");
 
-    const usernameExist = await User.findOne({ username: req.body.username });
-    if (usernameExist) return res.status(400).send("Username already exists");
-
-    //Checking if user is already in the database
-    const emailExist = await User.findOne({ email: req.body.email });
-    if (emailExist) return res.status(400).send("Email already exists");
-
-    //Hash passwords
-    const salt = await bcrypt.genSalt(10);
-    const hashedPassword = await bcrypt.hash(password, salt);
-
-    //Create new user
-    const user = new User({
-        username: username,
-        email: email,
-        password: hashedPassword,
-        projectName: projectName,
-        country: country
-    });
-
-    try {
-        const userSaved = user.save();
-        if (userSaved) res.status(200).send("user saved!");
-    } catch (error) {
-        res.status(400).send(error);
+  //Create new user
+  const userRegistered = new User({
+    name: user.name,
+    email: user.email,
+    picture: user.picture,
+    email_verified: user.email_verified,
+    locale: user.locale,
+  });
+  try {
+    const userSaved = userRegistered.save();
+    if (userSaved) {
+      return res.status(200).send("successfully saved");
     }
+  } catch (error) {
+    res.status(400).send(error);
+  }
+});
+
+router.post("/registerProject", async (req, res) => {
+  const { email, name, country } = req.body;
+
+  const user = await User.findOne({ email: email });
+
+  //Create new project
+  const projectRegistered = new Project({
+    user_id: user._id,
+    name: name,
+    country: country,
+  });
+  try {
+    const projectSaved = projectRegistered.save();
+    if (projectSaved) {
+      return res.status(200).send("successfully saved");
+    }
+  } catch (error) {
+    res.status(400).send(error);
+  }
 });
 
 module.exports = router;
