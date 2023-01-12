@@ -12,11 +12,10 @@ router.post("/checkUser", async (req, res) => {
 
   try {
     const emailExist = await User.findOne({ email: email });
-    console.log("exists: ", emailExist);
     if (emailExist) return res.status(200).send(true);
     return res.status(400).send(false);
   } catch (error) {
-    return res.status(402).send(error);
+    return res.status(402).send("Server Error");
   }
 });
 
