@@ -9,10 +9,14 @@ router.post("/checkUser", async (req, res) => {
   const email = req.body.email;
 
   //Checking if user is already in the database
-  const emailExist = await User.findOne({ email: email });
-  if (emailExist) return res.status(200).send(true);
 
-  return res.status(400).send(false);
+  try {
+    const emailExist = await User.findOne({ email: email });
+    if (emailExist) return res.status(200).send(true);
+    return res.status(400).send(false);
+  } catch (error) {
+    return res.status(400).send(error);
+  }
 });
 
 //REGISTER
