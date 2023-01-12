@@ -11,11 +11,6 @@ const projectSchema = new mongoose.Schema({
     required: true,
     min: 6,
   },
-  country: {
-    type: String,
-    required: true,
-    min: 6,
-  },
 });
 
 module.exports = mongoose.model("Project", projectSchema);

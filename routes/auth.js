@@ -22,7 +22,7 @@ router.post("/registerUser", async (req, res) => {
   //Checking if user is already in the database
   const emailExist = await User.findOne({ email: user.email });
   if (emailExist) return res.status(400).send("Email already exists");
-
+  console.log(user);
   //Create new user
   const userRegistered = new User({
     name: user.name,
