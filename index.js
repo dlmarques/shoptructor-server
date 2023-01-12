@@ -22,7 +22,7 @@ app.use("/api/auth", authRoute);
 
 //db connect
 mongoose.set("strictQuery", false);
-mongoose.connect(process.env.DB_CONNECT, async () =>
+mongoose.connect(process.env.DB_CONNECT, { useNewUrlParser: true }, async () =>
   console.log("connected to DB")
 );
 
