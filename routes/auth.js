@@ -35,6 +35,7 @@ router.post("/registerUser", async (req, res) => {
     picture: user.picture,
     email_verified: user.email_verified,
     locale: user.locale,
+    lang: user.lang,
   });
   try {
     const userSaved = userRegistered.save();
